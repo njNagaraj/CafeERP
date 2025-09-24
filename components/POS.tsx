@@ -163,6 +163,7 @@ const POS: React.FC = () => {
             <Modal isOpen={isCheckoutModalOpen} onClose={() => setCheckoutModalOpen(false)} title="Complete Order">
                  <div className="space-y-4">
                     <p className="text-center text-4xl font-bold text-gray-800">₹{orderDetails.total.toFixed(2)}</p>
+                    
                     <div className="flex justify-center space-x-2 py-4">
                         {Object.values(PaymentMode).map(mode => (
                             <button key={mode} onClick={() => setPaymentMode(mode)}
@@ -171,6 +172,20 @@ const POS: React.FC = () => {
                             </button>
                         ))}
                     </div>
+
+                    {paymentMode === PaymentMode.UPI && (
+                        <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg transition-all duration-300">
+                            <img 
+                                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=cafemilan@exampleupi&pn=CafeMilan&am=${orderDetails.total.toFixed(2)}&cu=INR&tn=Order${Date.now()}`}
+                                alt="UPI QR Code"
+                                className="w-48 h-48 md:w-56 md:h-56 rounded-md shadow-lg"
+                                aria-live="polite"
+                            />
+                            <p className="mt-4 font-semibold text-gray-700">Scan the QR code to pay</p>
+                            <p className="text-sm text-gray-500">Amount: ₹{orderDetails.total.toFixed(2)}</p>
+                        </div>
+                    )}
+
                     <button onClick={confirmOrder} className="w-full bg-green-500 text-white py-3 mt-4 rounded-lg text-xl font-bold shadow-lg hover:bg-green-600">
                         Generate Invoice
                     </button>
